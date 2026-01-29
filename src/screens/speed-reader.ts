@@ -1,6 +1,6 @@
 import { getState, setState, subscribe } from '../store';
 import { navigate } from '../router';
-import { calculateInterval } from '../utils';
+import { calculateInterval, formatWordForDisplay } from '../utils';
 
 class ReadingEngine {
   private intervalId: number | null = null;
@@ -84,6 +84,12 @@ class ReadingEngine {
     }
   }
 
+  restart(): void {
+    this.pause();
+    setState({ currentWordIndex: 0 });
+    this.start();
+  }
+
   destroy(): void {
     this.pause();
   }
@@ -113,7 +119,7 @@ export function renderSpeedReader(container: HTMLElement): void {
       </header>
 
       <main class="word-display">
-        <span id="current-word">${state.words[state.currentWordIndex] || ''}</span>
+        <span id="current-word">${formatWordForDisplay(state.words[state.currentWordIndex] || '')}</span>
       </main>
 
       <footer>
@@ -130,6 +136,7 @@ export function renderSpeedReader(container: HTMLElement): void {
         </div>
 
         <div class="playback-controls">
+          <button id="restart-btn" class="secondary-btn">Restart</button>
           <button id="play-pause-btn" class="primary-btn">
             ${state.isPlaying ? 'Pause' : 'Play'}
           </button>
@@ -150,16 +157,16 @@ export function renderSpeedReader(container: HTMLElement): void {
   const backBtn = document.getElementById('back-btn') as HTMLButtonElement;
 
   const unsubscribe = subscribe((newState) => {
-    currentWordEl.textContent = newState.words[newState.currentWordIndex] || 'Done!';
+    const word = newState.words[newState.currentWordIndex];
+    currentWordEl.textContent = word ? formatWordForDisplay(word) : 'DONE';
     progressEl.textContent = `Word ${newState.currentWordIndex + 1} of ${newState.words.length}`;
     playPauseBtn.textContent = newState.isPlaying ? 'Pause' : 'Play';
-
-    if (newState.currentWordIndex >= newState.words.length - 1 && !newState.isPlaying) {
-      currentWordEl.textContent = 'Done!';
-    }
   });
 
+  const restartBtn = document.getElementById('restart-btn') as HTMLButtonElement;
+
   playPauseBtn.addEventListener('click', () => engine.toggle());
+  restartBtn.addEventListener('click', () => engine.restart());
 
   speedSlider.addEventListener('input', () => {
     const wpm = parseInt(speedSlider.value, 10);

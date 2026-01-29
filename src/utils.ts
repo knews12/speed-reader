@@ -8,3 +8,9 @@ export function parseWords(text: string): string[] {
 export function calculateInterval(wordsPerMinute: number): number {
   return 60000 / wordsPerMinute;
 }
+
+export function formatWordForDisplay(word: string): string {
+  return word
+    .replace(/[.,;:!?"'""''()[\]{}—–-]/g, '')
+    .toUpperCase();
+}

@@ -148,6 +148,22 @@ textarea:focus {
   cursor: not-allowed;
 }
 
+.secondary-btn {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.secondary-btn:hover {
+  border-color: var(--accent);
+}
+
 .icon-btn {
   display: flex;
   align-items: center;
@@ -233,7 +249,13 @@ input[type='range']::-moz-range-thumb {
 }
 
 .playback-controls {
+  display: flex;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+.playback-controls .primary-btn {
+  flex: 1;
 }
 
 .keyboard-hint {
