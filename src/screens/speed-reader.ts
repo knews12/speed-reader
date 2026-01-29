@@ -158,7 +158,7 @@ export function renderSpeedReader(container: HTMLElement): void {
 
   const unsubscribe = subscribe((newState) => {
     const word = newState.words[newState.currentWordIndex];
-    currentWordEl.textContent = word ? formatWordForDisplay(word) : 'DONE';
+    currentWordEl.innerHTML = word ? formatWordForDisplay(word) : 'DONE';
     progressEl.textContent = `Word ${newState.currentWordIndex + 1} of ${newState.words.length}`;
     playPauseBtn.textContent = newState.isPlaying ? 'Pause' : 'Play';
   });
