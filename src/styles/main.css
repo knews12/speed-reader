@@ -199,25 +199,18 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   flex: 1;
+  font-family: 'Space Mono', monospace;
 }
 
-.word-display > span {
+.word-text {
   font-size: 4rem;
   font-weight: 700;
 }
 
-.word-before {
-  flex: 1;
-  text-align: right;
-}
-
-.word-after {
-  flex: 1;
-  text-align: left;
-}
-
 .focus-char {
   color: #cc8844;
+  font-size: 4rem;
+  font-weight: 700;
 }
 
 .speed-control {
@@ -278,7 +271,11 @@ input[type='range']::-moz-range-thumb {
 
 /* Responsive */
 @media (max-width: 600px) {
-  .word-display > span {
+  .word-text {
+    font-size: 2.5rem;
+  }
+
+  .focus-char {
     font-size: 2.5rem;
   }
 
