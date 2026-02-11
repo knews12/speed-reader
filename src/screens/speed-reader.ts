@@ -1,6 +1,6 @@
-import { getState, setState, subscribe } from '../store';
-import { navigate } from '../router';
-import { calculateInterval, formatWordForDisplay } from '../utils';
+import { getState, setState, subscribe } from "../store";
+import { navigate } from "../router";
+import { calculateInterval, formatWordForDisplay } from "../utils";
 
 class ReadingEngine {
   private intervalId: number | null = null;
@@ -99,7 +99,7 @@ export function renderSpeedReader(container: HTMLElement): void {
   const state = getState();
 
   if (state.words.length === 0) {
-    navigate('/');
+    navigate("/");
     return;
   }
 
@@ -108,18 +108,13 @@ export function renderSpeedReader(container: HTMLElement): void {
   container.innerHTML = `
     <div class="screen speed-reader-screen">
       <header>
-        <button id="back-btn" class="icon-btn" aria-label="Back">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-        </button>
         <div class="progress-text">
           <span id="progress">Word ${state.currentWordIndex + 1} of ${state.words.length}</span>
         </div>
       </header>
 
       <main class="word-display">
-        <span id="current-word">${formatWordForDisplay(state.words[state.currentWordIndex] || '')}</span>
+        <span id="current-word">${formatWordForDisplay(state.words[state.currentWordIndex] || "")}</span>
       </main>
 
       <footer>
@@ -136,9 +131,10 @@ export function renderSpeedReader(container: HTMLElement): void {
         </div>
 
         <div class="playback-controls">
+          <button id="back-btn" class="secondary-btn">Back</button>
           <button id="restart-btn" class="secondary-btn">Restart</button>
           <button id="play-pause-btn" class="primary-btn">
-            ${state.isPlaying ? 'Pause' : 'Play'}
+            ${state.isPlaying ? "Pause" : "Play"}
           </button>
         </div>
 
@@ -149,65 +145,76 @@ export function renderSpeedReader(container: HTMLElement): void {
     </div>
   `;
 
-  const currentWordEl = document.getElementById('current-word') as HTMLSpanElement;
-  const progressEl = document.getElementById('progress') as HTMLSpanElement;
-  const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
-  const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
+  const currentWordEl = document.getElementById(
+    "current-word",
+  ) as HTMLSpanElement;
+  const progressEl = document.getElementById("progress") as HTMLSpanElement;
+  const playPauseBtn = document.getElementById(
+    "play-pause-btn",
+  ) as HTMLButtonElement;
+  const speedSlider = document.getElementById(
+    "speed-slider",
+  ) as HTMLInputElement;
   const speedLabel = speedSlider.previousElementSibling as HTMLLabelElement;
-  const backBtn = document.getElementById('back-btn') as HTMLButtonElement;
+  const backBtn = document.getElementById("back-btn") as HTMLButtonElement;
 
   const unsubscribe = subscribe((newState) => {
     const word = newState.words[newState.currentWordIndex];
-    currentWordEl.innerHTML = word ? formatWordForDisplay(word) : 'DONE';
+    currentWordEl.innerHTML = word ? formatWordForDisplay(word) : "DONE";
     progressEl.textContent = `Word ${newState.currentWordIndex + 1} of ${newState.words.length}`;
-    playPauseBtn.textContent = newState.isPlaying ? 'Pause' : 'Play';
+    playPauseBtn.textContent = newState.isPlaying ? "Pause" : "Play";
   });
 
-  const restartBtn = document.getElementById('restart-btn') as HTMLButtonElement;
+  const restartBtn = document.getElementById(
+    "restart-btn",
+  ) as HTMLButtonElement;
 
-  playPauseBtn.addEventListener('click', () => engine.toggle());
-  restartBtn.addEventListener('click', () => engine.restart());
+  playPauseBtn.addEventListener("click", () => engine.toggle());
+  restartBtn.addEventListener("click", () => engine.restart());
 
-  speedSlider.addEventListener('input', () => {
+  speedSlider.addEventListener("input", () => {
     const wpm = parseInt(speedSlider.value, 10);
     speedLabel.textContent = `${wpm} WPM`;
     engine.setSpeed(wpm);
   });
 
-  backBtn.addEventListener('click', () => {
+  backBtn.addEventListener("click", () => {
     engine.destroy();
     unsubscribe();
-    navigate('/');
+    navigate("/");
   });
 
   const handleKeydown = (e: KeyboardEvent) => {
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+    if (
+      e.target instanceof HTMLInputElement ||
+      e.target instanceof HTMLTextAreaElement
+    ) {
       return;
     }
 
     switch (e.code) {
-      case 'Space':
+      case "Space":
         e.preventDefault();
         engine.toggle();
         break;
-      case 'ArrowLeft':
+      case "ArrowLeft":
         e.preventDefault();
         engine.previousWord();
         break;
-      case 'ArrowRight':
+      case "ArrowRight":
         e.preventDefault();
         engine.nextWord();
         break;
     }
   };
 
-  document.addEventListener('keydown', handleKeydown);
+  document.addEventListener("keydown", handleKeydown);
 
   const originalNavigate = window.history.pushState.bind(window.history);
   window.history.pushState = function (...args) {
     engine.destroy();
     unsubscribe();
-    document.removeEventListener('keydown', handleKeydown);
+    document.removeEventListener("keydown", handleKeydown);
     return originalNavigate(...args);
   };
 }

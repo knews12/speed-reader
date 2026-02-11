@@ -41,8 +41,9 @@ body {
 
 header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -62,6 +63,16 @@ footer {
 }
 
 /* Text Input Screen */
+.instructions {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.instructions p {
+  margin-bottom: 0.25rem;
+}
+
 .textarea-wrapper {
   flex: 1;
   display: flex;
@@ -184,7 +195,30 @@ textarea:focus {
 
 /* Speed Reader Screen */
 .speed-reader-screen header {
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.screen-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.speed-reader-screen .progress-text {
+  flex: none;
+  width: 100%;
 }
 
 .progress-text {
